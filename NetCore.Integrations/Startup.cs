@@ -24,8 +24,6 @@ namespace NetCore.Integrations
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddOptions();
-
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddSingleton<MailProvider>();
 
