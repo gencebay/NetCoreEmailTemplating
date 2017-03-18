@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NetCore.Contracts;
 using Newtonsoft.Json;
+using System;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace NetCore.Hosting.Controllers
@@ -27,18 +29,30 @@ namespace NetCore.Hosting.Controllers
                 return View();
             }
 
+            var emailModel = new RegistrationEmailViewModel
+            {
+                Body = "Welcome to .NET Core Wonderland",
+                IsHtml = true,
+                Name = model.Name,
+                Subject = "Registration",
+                RegistrationDate = DateTime.Now,
+                To = model.EMail
+            };
+
             var request = new HttpRequestMessage(HttpMethod.Post, "api/mail/sendasync")
             {
-                Content = new StringContent(JsonConvert.SerializeObject(model))
+                Content = new StringContent(JsonConvert.SerializeObject(emailModel), Encoding.UTF8, "application/json")
             };
+
             var response = await HostingFactory.HttpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             ViewData[nameof(WebResult)] = new WebResult
             {
-                Content = "Mail has been sent",
+                Content = "Mail has been sent.",
                 ResultState = ResultState.Success
             };
-            return View();
+
+            return View(new RegistrationViewModel());
         }
     }
 }

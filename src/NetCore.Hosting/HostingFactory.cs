@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 
 namespace NetCore.Hosting
@@ -12,6 +13,7 @@ namespace NetCore.Hosting
             var cookieContainer = new CookieContainer();
             var httpClientHandler = new HttpClientHandler() { CookieContainer = cookieContainer };
             HttpClient = new HttpClient(httpClientHandler);
+            HttpClient.BaseAddress = new Uri("http://localhost:51262/");
         }
     }
 }
