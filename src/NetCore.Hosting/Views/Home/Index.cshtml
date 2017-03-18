@@ -1,0 +1,44 @@
+﻿@{
+    var webResult = ViewData[nameof(WebResult)] != null ? (WebResult)ViewData[nameof(WebResult)] : null;
+}
+
+@model RegistrationViewModel
+
+<br />
+<div class="container">
+
+    @if (webResult != null)
+    {
+        <div class="row">
+            <div class="alert alert-@webResult.State">
+                @if (webResult.Validations.Any())
+                {
+                    <p>
+                        @Html.Raw(string.Join("<br/>", webResult.Validations
+                                .Where(p => p.AllMessages.Any()).Select(x => x.AllMessages.Replace(".", "<br/>")).ToList()))
+                    </p>
+                }
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <form class="form-horizontal" asp-controller="Home" asp-action="Index" method="post">
+            <div class="form-group">
+                <div class="col-md-7">
+                    <input type="text" asp-for="Name" placeholder="Name" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-7">
+                    <input type="text" asp-for="EMail" placeholder="Mail" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-7">
+                    <button type="submit" class="btn btn-primary">Send Email</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
