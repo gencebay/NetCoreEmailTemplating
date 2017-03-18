@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetCore.Contracts;
 using Swashbuckle.Swagger.Model;
 
 namespace NetCore.Integrations
@@ -23,7 +24,16 @@ namespace NetCore.Integrations
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddOptions();
+
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+            services.AddSingleton<MailProvider>();
+
+            services.AddMvc()
+                .AddRazorOptions(options =>
+                {
+                    options.FileProviders.Add(new MailTemplateFileProvider());
+                });
 
             services.AddSwaggerGen(c =>
             {
